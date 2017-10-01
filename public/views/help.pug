@@ -1,0 +1,67 @@
+//
+    NN-Police-Socrata
+
+    Created by Jason Wilson <jason@wilsons.io>
+
+    9/30/17.MIT License
+
+
+// public/views/help.pug
+
+doctype html
+
+html
+    head
+        title Code4HR | Newport News Police Open Data Syndication
+        meta(name="ROBOTS" content="NOINDEX, NOFOLLOW")
+
+        style(type="text/css").
+            html, body {
+                margin: 0px;
+                padding: 0px;
+                font-size: 16px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .wrapper {
+                margin: 2em;
+                max-width: 550px;
+                width: 90vw;
+                box-sizing: border-box;
+                font-family: sans-serif;
+            }
+            h1 {
+                font-size: 2em;
+                color: cadetblue;
+                font-weight: 700;
+                line-height: 1.5em;
+            }
+            p, li {
+                color: #777;
+                font-weight: 300;
+                line-height: 1.5em;
+                font-size: 1em;
+            }
+
+            ul {
+                list-style-type: none;
+                display: block;
+                padding: 0;
+                margin: 0;
+            }
+            li {
+            }
+
+    body
+        .wrapper
+            h1 Code4HR Newport News Police Open Data Syndication Help
+            p This API provides controls for starting and stopping Syndication Cron Jobs.
+            p To start all jobs browse to the endpoint '/{key}/start'
+            p To stop all jobs browse to the endpoint '/{key}/stop'
+            p
+                | To start or stop a specific job add the job name, for example '/{key}/TEST/stop' to stop
+                | the job named TEST. A list of currently available jobs is below.
+            ul
+                for job in jobs
+                    li= job
