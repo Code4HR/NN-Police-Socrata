@@ -42,23 +42,23 @@ const sourceData = {
   },
   DAILY_JUVENILE: {
     URI: 'https://gis2.nngov.com/ssrs/report/?rs:Name=/12-Police/Daily_Juvenile_Report_Public&rs:Command=Render&rs:Format=CSV',
-    cronPattern: '0 10 0-23/12 * * *' // Run automatically at Midnight and Noon
+    cronPattern: '0 10 0-23/12 * * *' // Run automatically at ten after Midnight and Noon
   },
   DAILY_OFFENSES: {
     URI: 'https://gis2.nngov.com/ssrs/report/?rs:Name=/12-Police/Daily_Offenses_Public&rs:Command=Render&rs:Format=CSV',
-    cronPattern: '0 15 0-23/12 * * *' // Run automatically at Midnight and Noon
+    cronPattern: '0 15 0-23/12 * * *' // Run automatically at quarter after Midnight and Noon
   },
   DAILY_FIELD_CONTACTS: {
     URI: 'https://gis2.nngov.com/ssrs/report/?rs:Name=/12-Police/Daily_Field_Contacts_Public&rs:Command=Render&rs:Format=CSV',
-    cronPattern: '0 20 0-23/12 * * *' // Run automatically at Midnight and Noon
+    cronPattern: '0 20 0-23/12 * * *' // Run automatically at twenty after Midnight and Noon
   },
   THEFT_FROM_VEHICLE: {
     URI: 'https://gis2.nngov.com/ssrs/report/?rs:Name=/12-Police/Daily_Theft_From_Vehicle_Public&rs:Command=Render&rs:Format=CSV',
-    cronPattern: '0 25 0-23/12 * * *' // Run automatically at Midnight and Noon
+    cronPattern: '0 25 0-23/12 * * *' // Run automatically at twenty-five after Midnight and Noon
   },
   TOW_IMPOUND: {
     URI: 'https://gis2.nngov.com/ssrs/report/?rs:Name=/12-Police/NNPD_Tow_Impound&rs:Command=Render&rs:Format=CSV',
-    cronPattern: '0 30 0-23/12 */7 * *' // Run automatically at Midnight and Noon every seven days
+    cronPattern: '0 30 0-23/12 */7 * *' // Run automatically at half past Midnight and Noon every seven days
   }
 }
 
@@ -131,14 +131,15 @@ server.get('/:key/:cron/stop', function (req, res) {
 
 server.get('/:key/start', function (req, res) {
   if (req.lock.unlocked) {
-    try {
-      crons.forEach(cron => {
-        cron.start()
-      })
-      res.send(`${req.lock.msg}, starting all crons...`)
-    } catch (err) {
-      res.send(`There was a problem starting the jobs, the error received was: \n ${err}`)
-    }
+    Object.keys(crons).forEach(job => {
+      try {
+        crons[job].start()
+        console.log(`${job} started: ${crons[job].running}`)
+      } catch (err) {
+        console.log(`There was a problem starting the jobs, the error received was: \n ${err}`)
+      }
+    })
+    res.send(`${req.lock.msg}, starting all crons...`)
   } else {
     res.send(`${req.lock.msg}, no actions will be performed.`)
   }
@@ -146,14 +147,14 @@ server.get('/:key/start', function (req, res) {
 
 server.get('/:key/stop', function (req, res) {
   if (req.lock.unlocked) {
-    try {
-      crons.forEach(cron => {
-        cron.stop()
-      })
-      res.send(`${req.lock.msg}, stopping all crons...`)
-    } catch (err) {
-      res.send(`There was a problem stopping the jobs, the error received was: \n ${err}`)
-    }
+    Object.keys(crons).forEach(job => {
+      try {
+        crons[job].stop()
+      } catch (err) {
+        console.log(`There was a problem starting the jobs, the error received was: \n ${err}`)
+      }
+    })
+    res.send(`${req.lock.msg}, stopping all crons...`)
   } else {
     res.send(`${req.lock.msg}, no actions will be performed.`)
   }
